@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 from getpass import getpass
 from sstash.sstash import SecureStash
 
@@ -81,8 +82,14 @@ def load_machine(machine_name,stash_path):
 
 
 def run():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p','--path', type=str,
+            help='Path of stash file')
+    parser.add_argument('-l','--load', action='store_true',
+            help='Path of stash file')
+    parser.add_argument('-s','--store', action='store_true',
+            help='Path of stash file')
     pass
-
 
 
 if __name__ == '__main__':
