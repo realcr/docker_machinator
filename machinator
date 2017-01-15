@@ -1,4 +1,7 @@
+#!/usr/bin/env python3
+
 import os
+import shutil
 import sys
 import argparse
 from getpass import getpass
@@ -14,9 +17,9 @@ def store_machine(machine_name,stash_path):
     """
 
     home_path = os.path.expanduser('~')
-    machine_path = join(home_path,'.docker','machine','machines',\
+    machine_path = os.path.join(home_path,'.docker','machine','machines',\
         machine_name)
-    certs_path = join(home_path,'.docker','machine','certs')
+    certs_path = os.path.join(home_path,'.docker','machine','certs')
 
     if not os.path.isdir(machine_path):
         raise MachinatorError('Machine {} does not exist. Aborting.'
@@ -46,9 +49,10 @@ def load_machine(machine_name,stash_path):
     Import a docker-machine from the machines dir.
     """
     home_path = os.path.expanduser('~')
-    machine_path = join(home_path,'.docker','machine','machines',\
+    print('home_path = {}',home_path)
+    machine_path = os.path.join(home_path,'.docker','machine','machines',\
         machine_name)
-    certs_path = join(home_path,'.docker','machine','certs')
+    certs_path = os.path.join(home_path,'.docker','machine','certs')
 
     # Make sure that we don't already have this machine in the homedir
     # inventory:
@@ -73,7 +77,7 @@ def load_machine(machine_name,stash_path):
     ss.read_dir(['machines',machine_name,'certs'],certs_path)
     
     # Replace the {{HOME}} placeholder with the current machine's home dir:
-    config_json_path = join(machine_path,'config.json')
+    config_json_path = os.path.join(machine_path,'config.json')
     with open(config_json_path,'r') as fr:
         config_json_data = fr.read()
     config_json_data.replace('{{HOME}}',home_path)
@@ -81,15 +85,37 @@ def load_machine(machine_name,stash_path):
         fw.write(config_json_data)
 
 
+def store_cmd(args):
+    store_machine(args.machine, args.stash_path)
+
+def load_cmd(args):
+    load_machine(args.machine, args.stash_path)
+
 def run():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p','--path', type=str,
-            help='Path of stash file')
-    parser.add_argument('-l','--load', action='store_true',
-            help='Path of stash file')
-    parser.add_argument('-s','--store', action='store_true',
-            help='Path of stash file')
-    pass
+    subparsers = parser.add_subparsers(help='help for subcommand')
+
+    parser_load = subparsers.add_parser('load', help='Load a machine')
+    parser_load.add_argument('machine', type=str, 
+            help='Name of machine')
+    parser_load.add_argument('stash_path', type=str, 
+            help='path of stash file')
+    parser_load.set_defaults(func=load_cmd)
+
+    parser_store = subparsers.add_parser('store', help='Store a machine')
+    parser_store.add_argument('machine', type=str, 
+            help='Name of machine')
+    parser_store.add_argument('stash_path', type=str, 
+            help='path of stash file')
+    parser_store.set_defaults(func=store_cmd)
+
+    args = parser.parse_args()
+    if not hasattr(args,'func'):
+        parser.print_help()
+        return 0
+
+    args.func(args)
+    return 0
 
 
 if __name__ == '__main__':
