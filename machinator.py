@@ -3,6 +3,8 @@ import sys
 from getpass import getpass
 from sstash.sstash import SecureStash
 
+class MachinatorError(Exception): pass
+
 def store_machine(machine_name,stash_path):
     """
     Export a docker-machine from to the machines dir.
@@ -16,8 +18,8 @@ def store_machine(machine_name,stash_path):
     certs_path = join(home_path,'.docker','machine','certs')
 
     if not os.path.isdir(machine_path):
-        print('Machine {} does not exist. Aborting.'.format(machine_name))
-        return
+        raise MachinatorError('Machine {} does not exist. Aborting.'
+                .format(machine_name))
 
     # Prompt user for stash password:
     password = getpass("Stash password:")
@@ -50,17 +52,16 @@ def load_machine(machine_name,stash_path):
     # Make sure that we don't already have this machine in the homedir
     # inventory:
     if os.path.isdir(machine_path):
-        return print('Machine {} already exists. Aborting.'\
-                .format(machine_name))
+        raise MachinatorError('Machine {} already exists. Aborting.'\
+            .format(machine_name))
 
     # Prompt user for stash password:
     password = getpass("Stash password:")
     ss = SecureStash(stash_path,password)
 
     if machine_name not in ss.get_children(['machines']):
-        print('Machine {} does not exist in inventory. Aborting.'\
+        raise MachinatorError('Machine {} does not exist in inventory. Aborting.'\
                 .format(machine_name))
-        return
 
     ss.read_dir(['machines',machine_name,'machine_info'],machine_path)
     # Remove current set of certs if exists:
