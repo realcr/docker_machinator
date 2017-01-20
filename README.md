@@ -87,7 +87,7 @@ stash
 To load the docker-machine from the stash, I use the following command:
 
 ```
-$ dmachinator load hamshoosh stash 
+$ dmachinator load mymachine stash 
 Stash password:
 ```
 
