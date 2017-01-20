@@ -48,7 +48,6 @@ def load_machine(machine_name,stash_path):
     Import a docker-machine from the machines dir.
     """
     home_path = os.path.expanduser('~')
-    print('home_path = {}',home_path)
     machine_path = os.path.join(home_path,'.docker','machine','machines',\
         machine_name)
     certs_path = os.path.join(home_path,'.docker','machine','certs')
