@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import os
 import shutil
 import sys
@@ -92,7 +90,7 @@ def store_cmd(args):
 def load_cmd(args):
     load_machine(args.machine, args.stash_path)
 
-def run():
+def main():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(help='help for subcommand')
 
@@ -113,12 +111,8 @@ def run():
     args = parser.parse_args()
     if not hasattr(args,'func'):
         parser.print_help()
-        return 0
+        sys.exit(0)
 
     args.func(args)
-    return 0
-
-
-if __name__ == '__main__':
-    sys.exit(run())
+    sys.exit(0)
 
