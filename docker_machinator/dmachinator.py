@@ -39,7 +39,7 @@ def store_machine(machine_name,stash_path):
     # TODO: Check if this is actually working.
     config_json_key = ['machines',machine_name,'machine_info','config.json']
     config_json_data = ss.read_value(config_json_key).decode('utf-8')
-    config_json_data.replace(home_path,'{{HOME}}')
+    config_json_data = config_json_data.replace(home_path,'{{HOME}}')
     ss.write_value(config_json_key,config_json_data.encode('utf-8'))
 
 
