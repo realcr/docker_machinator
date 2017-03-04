@@ -103,4 +103,4 @@ NAME        ACTIVE   DRIVER         STATE     URL                          SWARM
 mymachine   -        digitalocean   Running   tcp://xxx.xxx.xxx.xxx:yyyy           v1.11.2   
 ```
 
-Exactly as we head earlier on the desktop machine.
+Exactly as we had earlier on the desktop machine.
