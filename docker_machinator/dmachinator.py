@@ -63,8 +63,9 @@ def load_machine(machine_name,stash_path):
     ss = SecureStash(stash_path,password)
 
     if machine_name not in ss.get_children(['machines']):
-        raise MachinatorError('Machine {} does not exist in inventory. Aborting.'\
-                .format(machine_name))
+        raise MachinatorError('Machine {} does not exist in inventory. Aborting.\n'
+                'Available machines: {}'\
+                .format(machine_name, ss.get_children(['machines'])))
 
     ss.read_dir(['machines',machine_name,'machine_info'],machine_path)
     # Remove current set of certs if exists:
